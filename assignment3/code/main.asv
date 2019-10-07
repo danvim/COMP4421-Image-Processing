@@ -1,0 +1,37 @@
+clc
+clear
+
+img_name = '...';
+img = imread(img_name);
+
+[digits_set] = digit_segment(img);
+
+accuracy = ada_classification(digits_set);
+
+d = load("mnist.mat");
+
+X = d.trainX;
+Y = d.testY;
+
+% i = reshape(X(3,:), 28, 28)'; imshow(i); Y(3);
+
+X4D = cat(4);
+
+for i = 1:60000
+    X4D = [X4D, [reshape(X(i,:), 28, 28)']];
+end
+
+layer = [
+    imageInputLayer([28 28 1])
+    
+    convolution2dLayer(3, 8, 'Padding', 'same')
+    batchNormalizationLayer
+    dropoutLayer
+    reluLayer
+    
+    fullyConnectedLayer
+    softmaxLayer
+    classificationLayer
+    ];
+
+options = trainingOptions();

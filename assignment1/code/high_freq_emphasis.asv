@@ -1,0 +1,18 @@
+function img_result = high_freq_emphasis(img_input, a, b, type)
+
+cutoff = 0.1;
+n = 1;
+[h, w] = size(img_input);
+
+if (strcmp(type, 'butterworth'))
+    f = butterworth(size(img_input), cutoff, n);
+else
+    f = gaussian(size(img_input), cutoff);
+end
+
+H = f;
+L = ones(h, w) - H;
+
+E = a + b*L;
+
+img_result = filter2d_fre(img_input, E);

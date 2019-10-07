@@ -1,0 +1,40 @@
+function [digits_set] = digit_segment(img)
+
+% Implement the digit segmentation
+% img: input image
+% digits_set: a matrix that stores the segmented digits. The number of rows
+%            equal to the number of digits in the iuput image. Each digit 
+%            is stored in each row.
+
+%% Histogram
+
+[h, w, ~] = size(img);
+
+% Filtering to remain only handwriting white characters
+gray = rgb2gray(img);
+er = imerode(gray, strel('disk', 2.0));
+bw = imbinarize(er, 0.4);
+op = bwareaopen(~bw, 50);
+
+y_hist = sum(op, 2);
+
+segments = [];
+
+current_segment = [];
+
+seg_i = 0;
+see_w = false;
+for y = 1:h
+    row_nempty = y_hist(y) > 0;
+    if (row_nempty && ~see_w)
+        seg_i = seg_i + 1;
+        if (~isemp)
+        see_w = true;
+    else
+        segments(seg_i) = [segments(seg_i), img(y,:)];
+    end
+    
+    if (~row_nempty && see_w)
+        see_w = false;
+    end
+end

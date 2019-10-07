@@ -1,0 +1,14 @@
+function img_result = filter2d_fre(img_input, filter)
+
+[h w] = size(img_input);
+[fil_h fil_w] = size(filter);
+filter_padded = zeros(h, w);
+filter_padded(floor((h-fil_h)/2):3, floor((w-fil_w)/2):3) =
+filter = padarray(filter, [floor((h-fil_h)/2) floor((w-fil_w)/2)], 0, 'both');
+
+[h w]
+size(filter)
+
+dft_filter = dft_2d(filter, 'DFT');
+
+img_result = dft_2d(dft_2d(img_input, 'DFT') .* dft_filter, 'IDFT');
